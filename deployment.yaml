@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: essential-app
+spec:
+  replicas: 2  # Number of desired replicas
+  selector:
+    matchLabels:
+      app: essential-app  # Label to match with the pods
+  template:
+    metadata:
+      labels:
+        app: essential-app  # Label for the pods
+    spec:
+      containers:
+        - name: essential-app  # Name of your container
+          image: pal404error/essential-app:latest  # Docker image and its tag
+          ports:
+            - containerPort: 80  # Port on which your React app is running
