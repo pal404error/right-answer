@@ -1,0 +1,67 @@
+*{
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
+.main{
+    width: 100%;
+    height: 650px;
+    border: 0px solid rgb(8, 8, 8);     
+    position: relative;  
+    background: url(./media/sun-planet.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
+.back{
+    width: 100%;
+    height: 650px;
+    border: 0px solid blue;
+    position: absolute;
+    background-color: rgba(0,0,0,0.6);
+}
+.back label{
+    color: white;
+}
+.back .login{
+    margin-top: 15%;
+    margin-left: 28%;
+    border: 0px solid red;
+    height: auto;
+    width: 600px;
+}
+
+.main1{
+    width: 100%;
+    height: 650px;
+    border: 0px solid rgb(8, 8, 8);     
+    position: relative;  
+    background: url(./media/sun-planet.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
+.back1{
+    width: 100%;
+    height: 650px;
+    border: 0px solid blue;
+    position: absolute;
+    background-color: rgba(0,0,0,0.6);
+}
+.back1 label{
+    color: white;
+}
+.back1 .forgot{
+    margin-top: 17%;
+    margin-left: 30%;
+    border: 0px solid red;
+    height: auto;
+    width: 700px;
+}
+#submit{
+    margin-top: 10px;
+}
+
+
+
