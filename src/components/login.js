@@ -1,9 +1,29 @@
 import React, { Component, useState } from "react";
 import "../components/style.css";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { BrowserRouter, Link } from "react-router-dom";
+import { initializeApp } from "firebase/app";
+import { auth } from "../firebase";
 
 function LogIn()
 {
+
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+
+  const getEmail = (e) =>{
+      setEmail(e.target.value);
+  };
+
+  const getPass = (e) =>{
+    setPass(e.target.value);
+};
+
+const Login = () => {
+  console.log(email.pass);
+};
+
+  
     return(
         <>
             <form>
@@ -15,16 +35,16 @@ function LogIn()
           
           <div class="form-group">
             <label for="exampleInputEmail1">Username:</label>
-            <input type="email" class="col-6 form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username"/>
+            <input type="email" class="col-6 form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" onChange={getEmail}/>
           </div>
           <div class="form-group">
             <label for="exampleInputPassword1">Password:</label>
-            <input type="password" class="col-6 form-control" id="exampleInputPassword1" placeholder="Password"/>
+            <input type="password" class="col-6 form-control" id="exampleInputPassword1" placeholder="Password" onChange={getPass}/>
           </div>
           <div class="form-group form-check">
-            <label class="form-check-label" for="exampleCheck1">forgot password? <a href="">reset</a></label>
+            <label class="form-check-label" for="exampleCheck1">forgot password? <a href="/reset">reset</a></label>
           </div>
-          <button type="submit" class="btn btn-primary">Login</button> 
+          <button type="submit" class="btn btn-primary" onClick={Login}>Login</button> 
 
         </div> 
 
@@ -32,9 +52,8 @@ function LogIn()
     </div>
     
 </form>
-  
         </>
-    )
+    );
 }
 
 export default LogIn;

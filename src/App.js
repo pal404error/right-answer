@@ -2,13 +2,22 @@ import logo from './logo.svg';
 import './App.css';
 import LogIn from './components/login';
 import Forgot from './components/forgot';
+import { Route, Routes, useRoutes } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
+import Template from './components/template';
 
 
 function App() {
   return (
     <>
-    <LogIn></LogIn>
-    <Forgot></Forgot>
+    <BrowserRouter>
+    <Routes>
+      <Route exact path="login" element={<LogIn/>}/>
+      <Route exact path="reset" element={<Forgot/>}/>
+    </Routes>
+    </BrowserRouter>
+
+    <Template></Template>
     </>
   );
 }

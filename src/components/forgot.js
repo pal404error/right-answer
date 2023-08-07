@@ -27,7 +27,7 @@ function Forgot()
 </form>
   
         </>
-    )
+    );
 }
 
 export default Forgot;
