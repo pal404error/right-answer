@@ -19,8 +19,21 @@ function LogIn()
     setPass(e.target.value);
 };
 
-const Login = () => {
-  console.log(email.pass);
+const Login = (e) => {
+  e.preventDefault();
+
+  signInWithEmailAndPassword(auth, email, pass)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log("Success");
+    // ...
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorMessage);
+  });
 };
 
   
@@ -44,7 +57,7 @@ const Login = () => {
           <div class="form-group form-check">
             <label class="form-check-label" for="exampleCheck1">forgot password? <a href="/reset">reset</a></label>
           </div>
-          <button type="submit" class="btn btn-primary" onClick={Login}>Login</button> 
+          <button class="btn btn-primary" onClick={Login}>Login</button> 
 
         </div> 
 

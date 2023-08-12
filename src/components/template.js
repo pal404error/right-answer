@@ -5,7 +5,7 @@ import Forgot from "./forgot";
 function Template(){
     return(
         <>
-        <LogIn></LogIn>
+        <LogIn/>
         </>
     )
 }
