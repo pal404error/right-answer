@@ -5,7 +5,6 @@ import { auth } from "../firebase";
 
 function Forgot()
 {
-
   const [email, setEmail] = useState("");
 
   const getEmail = (e) =>
@@ -47,6 +46,7 @@ function Forgot()
       </div>
     </div>
 </form>
+
         </>
     );
 }
