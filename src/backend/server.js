@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const router = express.Router();
+const db = require("./firebaseForServer");
+const { ref, set } = require("firebase/database");
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
@@ -22,5 +24,19 @@ app.get('/testing', (req, res) => {
     console.log("working");
     res.status(500).json({
         test:"working",
+    })
+})
+
+app.post('/editMenu', (req, res) => {
+	
+	console.log(req.body);
+	
+	set(ref(db, "testing"),
+	{
+	   name:req.body.name,
+	});
+
+	res.status(500).json({
+        name:req.body.name,
     })
 })
