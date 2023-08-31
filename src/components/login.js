@@ -7,7 +7,6 @@ import { auth } from "../firebase";
 
 function LogIn()
 {
-
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
