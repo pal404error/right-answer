@@ -9,10 +9,13 @@ app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
-	res.header("Access-Control-Allow-Origin",
-			"http://localhost:4200");
-	res.header("Access-Control-Allow-Origin",
-			"http://localhost:3000");
+
+	const allowedOrigins = ["http://localhost:4200","http://localhost:3000","http://localhost:5173"];
+	const origin = req.headers.origin;
+	if (allowedOrigins.includes(origin)) {
+		 res.setHeader('Access-Control-Allow-Origin', origin);
+	}
+
 	res.header("Access-Control-Allow-Headers",
 			"Origin, X-Requested-With, Content-Type, Accept");
 	next();
@@ -51,22 +54,49 @@ app.post('/editMenu', (req, res) => {
 
 app.post('/newOrder', (req, res) => {
 
-	var obj = req.body;
+	var orderString = req.body.year+req.body.month+req.body.date+req.body.hour+req.body.minute+req.body.second;
 
-	Object.keys(obj).forEach(key => {
-		console.log(key, obj[key]);
-	  });
+	set(ref(db, "orders/newOrders/"+req.body.table+"/"+orderString),
+	{
+		"item":req.body.item,
+		"quantity":req.body.quantity,
+		"price":req.body.price,
+		"table":req.body.table,
+		"year":req.body.year,
+		"month":req.body.month,
+		"date":req.body.date,
+		"hour":req.body.hour,
+		"minute":req.body.minute,
+		"second":req.body.second,
+		"read":false,
+		"approved":false
+	}).catch((error) => {
+		if(error == null) {console.log("Fine");}
+		else {console.error("Error", error);}
+	});
 
-	  res.status(500).json({
-        name:req.body.name,
-    })
+	res.status(200).send(req.body);
 })
 
 app.post('/getMenu', (req, res) => {
 	const starCountRef = ref(db);
         get(child(starCountRef, req.body.branch_name+"/menu")).then((snapshot) => {
           if (snapshot.exists()) { 
-			  res.status(500).send(snapshot.val());
+			  res.status(200).send(snapshot.val());
+          } else {
+            console.log("post");
+          }
+        }).catch((error) => {
+          console.error(error);
+        });	
+})
+
+app.post('/getOrderData', (req, res) => {
+	const starCountRef = ref(db);
+        get(child(starCountRef, req.body.branch_name+"/order_data/2023/august")).then((snapshot) => {
+          if (snapshot.exists()) { 
+			  res.status(200).send(snapshot.val());
+			  console.log(typeof(req.body));
           } else {
             console.log("post");
           }
