@@ -1,0 +1,18 @@
+{
+  "files": {
+    "main.css": "/static/css/main.3d2ca3e2.css",
+    "main.js": "/static/js/main.b17890a3.js",
+    "static/js/787.a8c48086.chunk.js": "/static/js/787.a8c48086.chunk.js",
+    "static/media/sun-planet.jpg": "/static/media/sun-planet.5e6eceb3e702e9890e66.jpg",
+    "static/media/fastfood2.jpg": "/static/media/fastfood2.a0dd5c5ff60f030508de.jpg",
+    "static/media/logo.svg": "/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/index.html",
+    "main.3d2ca3e2.css.map": "/static/css/main.3d2ca3e2.css.map",
+    "main.b17890a3.js.map": "/static/js/main.b17890a3.js.map",
+    "787.a8c48086.chunk.js.map": "/static/js/787.a8c48086.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.3d2ca3e2.css",
+    "static/js/main.b17890a3.js"
+  ]
+}
