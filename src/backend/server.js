@@ -3,7 +3,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const router = express.Router();
 const db = require("./firebaseForServer");
-const { ref, get, child, update, set } = require("firebase/database");
+const { ref, get, child, update, set, push } = require("firebase/database");
+require("firebase/database");
 
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
@@ -34,8 +35,6 @@ app.get('/testing', (req, res) => {
 
 app.post('/editMenu', (req, res) => {
 	
-	console.log(req.body);
-	
 	set(ref(db, req.body.branch_name+"/menu/"+req.body.parent_category+"/"+req.body.name),
 	{
 	   name:req.body.name,
@@ -53,28 +52,18 @@ app.post('/editMenu', (req, res) => {
 })
 
 app.post('/newOrder', (req, res) => {
-
-	var orderString = req.body.year+req.body.month+req.body.date+req.body.hour+req.body.minute+req.body.second;
-
-	set(ref(db, "orders/newOrders/"+req.body.table+"/"+orderString),
-	{
-		"item":req.body.item,
-		"quantity":req.body.quantity,
-		"price":req.body.price,
-		"table":req.body.table,
-		"year":req.body.year,
-		"month":req.body.month,
-		"date":req.body.date,
-		"hour":req.body.hour,
-		"minute":req.body.minute,
-		"second":req.body.second,
-		"read":false,
-		"approved":false
-	}).catch((error) => {
+	push(ref(db, "orders/newOrders/"+req.body.table),
+	req.body).catch((error) => {
+		if(error == null) {console.log("Fine");}
+		else {console.error("Error", error);}
+	}).then((snap) => {
+		update(ref(db, "orders/newOrders/"+req.body.table+"/"+snap.key),
+		{"key":snap.key}).catch((error) => {
 		if(error == null) {console.log("Fine");}
 		else {console.error("Error", error);}
 	});
-
+	});
+	updateOrderData(req.body);
 	res.status(200).send(req.body);
 })
 
@@ -93,10 +82,9 @@ app.post('/getMenu', (req, res) => {
 
 app.post('/getOrderData', (req, res) => {
 	const starCountRef = ref(db);
-        get(child(starCountRef, req.body.branch_name+"/order_data/2023/august")).then((snapshot) => {
+        get(child(starCountRef, req.body.branch_name+"/order_data/2023/"+req.body.month)).then((snapshot) => {
           if (snapshot.exists()) { 
 			  res.status(200).send(snapshot.val());
-			  console.log(typeof(req.body));
           } else {
             console.log("post");
           }
@@ -104,3 +92,114 @@ app.post('/getOrderData', (req, res) => {
           console.error(error);
         });	
 })
+
+app.get('/getNewOrders', (req, res) => {
+	const starCountRef = ref(db);
+        get(child(starCountRef, "orders/newOrders")).then((snapshot) => {
+          if (snapshot.exists()) { 
+			  res.status(200).send(snapshot.val());
+          } else {
+            console.log("post");
+          }
+        }).catch((error) => {
+          console.error(error);
+        });	
+})
+
+function updateOrderData(data)
+{
+	var month;
+	switch (data.month)
+	{
+		case "01":
+			month = "January"
+			break;
+		
+		case "02":
+			month = "February"
+			break;
+		
+		case "03":
+			month = "March"
+			break;
+			
+		case "04":
+			month = "April"
+			break;
+		
+		case "05":
+			month = "May"
+			break;
+		
+		case "06":
+			month = "June"
+			break;
+		
+		case "07":
+			month = "July"
+			break;
+		
+		case "08":
+			month = "August"
+			break;
+		
+		case "09":
+			month = "September"
+			break;
+		
+		case "10":
+			month = "October"
+			break;
+		
+		case "11":
+			month = "November"
+			break;
+		
+		case "12":
+			month = "December"
+			break;
+
+		default:
+			break;
+	};
+
+	var total_orders = 0;
+	var temp_revenue = 0;
+	Object.keys(data).forEach(key => {
+		if(key === "orderItems")
+		{
+			Object.keys(data[key]).forEach(key2 => {
+				total_orders = total_orders + parseInt(data[key][key2]["quantity"]);
+				temp_revenue = temp_revenue + parseInt(data[key][key2]["price"]);
+			  });
+		}
+	  });
+
+	var revenue = 0;
+	var orders = 0;
+	const starCountRef = ref(db);
+	get(child(starCountRef, "vadodara/order_data/"+data.year+"/"+month+"/"+data.date)).then((snapshot) => {
+	  if (snapshot.exists()) { 
+		revenue = snapshot.val()["revenue"];
+		orders = snapshot.val()["total_orders"]; 
+	  } else {
+		console.log("No exsting data to update.");
+	  }
+
+	  revenue = revenue + temp_revenue;
+	  orders = orders + total_orders;
+	  
+	  set(ref(db, "vadodara/order_data/"+data.year+"/"+month+"/"+data.date),
+		{
+			date:data.date + " " + month.substring(0, 3),
+			revenue:revenue,
+			total_orders:orders,
+		}).catch((error) => {
+			if(error == null) {console.log("Fine");}
+			else {console.error("Error", error);}
+		});
+	  
+	}).catch((error) => {
+	  console.error(error);
+	});
+}

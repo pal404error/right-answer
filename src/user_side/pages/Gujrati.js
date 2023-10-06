@@ -70,6 +70,9 @@ const Gujrati = () => {
                 <Typography variant="h5" gutterBottom component={"div"}>
                   {menuItem.name}
                 </Typography>
+                <Typography variant="h6" gutterBottom component={"div"}>
+                  {menuItem.price} Rs
+                </Typography>
                 <Typography variant="body2">{menuItem.description}</Typography>
                 <Button onClick={() => handleOrderClick(menuItem.name)} variant="contained" color="primary">
                   Order Now
