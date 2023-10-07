@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const router = express.Router();
 const db = require("./firebaseForServer");
-const { ref, get, child, update, set, push } = require("firebase/database");
+const { ref, get, child, update, set, push, remove } = require("firebase/database");
 require("firebase/database");
 
 app.use(bodyParser.urlencoded({extended:false}));
@@ -63,7 +63,6 @@ app.post('/newOrder', (req, res) => {
 		else {console.error("Error", error);}
 	});
 	});
-	updateOrderData(req.body);
 	res.status(200).send(req.body);
 })
 
@@ -105,6 +104,56 @@ app.get('/getNewOrders', (req, res) => {
           console.error(error);
         });	
 })
+
+app.get('/getCurrentOrders', (req, res) => {
+	const starCountRef = ref(db);
+        get(child(starCountRef, "orders/currentOrders")).then((snapshot) => {
+          if (snapshot.exists()) { 
+			  res.status(200).send(snapshot.val());
+          } else {
+            console.log("post");
+          }
+        }).catch((error) => {
+          console.error(error);
+        });	
+})
+
+app.post('/acceptOrder', (req, res) => {
+
+	removeOrder(req.body.table, req.body.key);
+
+	push(ref(db, "orders/currentOrders/"+req.body.table),
+	req.body).catch((error) => {
+		if(error == null) {console.log("Fine");}
+		else {console.error("Error", error);}
+	}).then((snap) => {
+		update(ref(db, "orders/currentOrders/"+req.body.table+"/"+snap.key),
+		{"key":snap.key}).catch((error) => {
+		if(error == null) {console.log("Fine");}
+		else {console.error("Error", error);}
+	});
+	});
+	updateOrderData(req.body);
+	res.status(200).send(req.body);
+})
+
+app.post('/doneOrder', (req, res) => {
+	set(ref(db, "orders/currentOrders/"+req.body.table+"/"+req.body.key), null);
+
+	push(ref(db, "orders/pastOrders/"+req.body.year+"/"+req.body.month),
+	req.body).catch((error) => {
+		if(error == null) {console.log("Fine");}
+		else {console.error("Error", error);}
+	}).then((snap) => {
+		update(ref(db, "orders/pastOrders/"+req.body.year+"/"+req.body.month+"/"+snap.key),
+		{"key":snap.key}).catch((error) => {
+		if(error == null) {console.log("Fine");}
+		else {console.error("Error", error);}
+	});
+	});
+	res.status(200).send(req.body);
+})
+
 
 function updateOrderData(data)
 {
@@ -202,4 +251,9 @@ function updateOrderData(data)
 	}).catch((error) => {
 	  console.error(error);
 	});
+}
+
+function removeOrder(table, key)
+{
+	set(ref(db, "orders/newOrders/"+table+"/"+key), null);
 }
