@@ -34,7 +34,7 @@ app.get('/testing', (req, res) => {
 })
 
 app.post('/editMenu', (req, res) => {
-	
+	var returnStatus = true;
 	set(ref(db, req.body.branch_name+"/menu/"+req.body.parent_category+"/"+req.body.name),
 	{
 	   name:req.body.name,
@@ -42,12 +42,12 @@ app.post('/editMenu', (req, res) => {
 	   image_link:req.body.image_link,
 	   price:req.body.price,
 	}).catch((error) => {
-		if(error == null) {console.log("Fine");}
+		if(error == null) {console.log("Fine");returnStatus = true;}
 		else {console.error("Error", error);}
 	});
 
-	res.status(500).json({
-        name:req.body.name,
+	res.status(200).json({
+        "status":returnStatus,
     })
 })
 
