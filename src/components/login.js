@@ -1,5 +1,5 @@
 import React, { Component, useState } from "react";
-import "../components/style.css";
+import "./style.css";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { BrowserRouter, Link, Navigate } from "react-router-dom";
 import { initializeApp } from "firebase/app";
@@ -26,7 +26,7 @@ const Login = (e) => {
     // Signed in 
     const user = userCredential.user;
     console.log("Success");
-    window.location.replace('http://localhost:5173/');
+    window.location.replace('/home');
     // ...
   })
   .catch((error) => {
